@@ -1,10 +1,19 @@
-﻿using System;
-using System.Numerics;
-
-namespace TicTacToeNew
+﻿namespace TicTacToeNew
 {
     internal class Program
     {
+        static Player p1, p2;
+
+        class Player
+        {
+            public string name;
+            public char sign;
+            public Player(string name, char sign)
+            {
+                this.name = name;
+                this.sign = sign;
+            }
+        }
         static void Main(string[] args)
         {
             GameWelcomeAndInstructions();
@@ -17,7 +26,6 @@ namespace TicTacToeNew
 
             GameEngine(board);
             
-            PrintGameBoard(board);
         }
 
         //Functions
@@ -40,6 +48,7 @@ namespace TicTacToeNew
                 Console.WriteLine("Do you want to be X or O ?");
                 char choice = Console.ReadLine()[0];
 
+             
                 Console.WriteLine("Enter second name:");
                 string name2 = Console.ReadLine();
 
@@ -49,6 +58,9 @@ namespace TicTacToeNew
                     Console.WriteLine("");
                     Console.WriteLine($"{name1} = {flag}");
                     Console.WriteLine($"{name2} = O");
+
+                     p1 = new Player(name1, flag);
+                     p2 = new Player(name2, 'O');
                     Console.WriteLine("");
                     Console.WriteLine("Press any key to start the game.");
                     Console.ReadLine();
@@ -62,6 +74,8 @@ namespace TicTacToeNew
                     Console.WriteLine($"{name1} = {flag}");
                     Console.WriteLine($"{name2} = X");
                     Console.WriteLine("");
+                    p1 = new Player(name1, flag);
+                    p2 = new Player(name2, 'X');
                     Console.WriteLine("Press any key to start the game.");
                     Console.ReadLine();
                     break;
@@ -114,11 +128,28 @@ namespace TicTacToeNew
                 Console.Clear();
                 PrintGameBoard(board);
 
-                Console.Write($"{player} choose a row:");
-                int row = Convert.ToInt32(Console.ReadLine());
-                Console.Write($"{player} choose a column:");
-                int col = Convert.ToInt32(Console.ReadLine());
 
+                Console.Write($"{player} choose a row:");
+                //int row = Convert.ToInt32(Console.ReadLine());
+                int.TryParse(Console.ReadLine(), out int row);
+
+                Console.Write($"{player} choose a column:");
+                // int col = Convert.ToInt32(Console.ReadLine());
+                int.TryParse(Console.ReadLine(), out int col);
+
+
+                while (row<0||col<0 ||  row > 2 || col > 2 ||  board[row, col] != ' ')
+                {
+                    Console.WriteLine("Please Choose another spot!");
+                    Console.Write($"{player} choose a row:");
+                    //row = Convert.ToInt32(Console.ReadLine());
+                    int.TryParse(Console.ReadLine(), out row);
+
+                    Console.Write($"{player} choose a column:");
+                    //col = Convert.ToInt32(Console.ReadLine());
+                    int.TryParse(Console.ReadLine(), out col);
+
+                }
                 board[row, col] = player;
 
 
@@ -135,9 +166,10 @@ namespace TicTacToeNew
                  player == board[0, 0] && player == board[1, 1] && player == board[2, 2] ||
                  player == board[0, 2] && player == board[1, 1] && player == board[2, 0])
                 {
-                    Console.WriteLine("");
-                    Console.WriteLine($"{player} won the game!");
-                    Console.WriteLine("");
+                    Console.WriteLine();
+                    Console.Clear();
+                    PrintGameBoard(board);
+                    Console.WriteLine($"{(p1.sign.Equals(player) ? p1.name : p2.name)} won the game!");
                     break;
                 }
 
@@ -147,6 +179,8 @@ namespace TicTacToeNew
                 if (movePlayed == 9)
                 {
                     Console.WriteLine("");
+                    Console.Clear();
+                    PrintGameBoard(board); ;
                     Console.WriteLine("Draw!");
                     break;
                 }
@@ -167,38 +201,16 @@ namespace TicTacToeNew
                 return 'X';
             }
         }
-
-        //static char PreventOverwritingMoves(char player)
-        //{
-        //    if (player %2 ==0)
-        //    {
-        //        return 'O';
-        //    }
-        //    return 'X';
-        //}
-
-
     }
 }
 
 //הערות
 
-//1. - משום שרציתי להשתמש בשם השחקנים, לא הצלחתי להשתמש ב
+// - משום שרציתי להשתמש בשם השחקנים, לא הצלחתי להשתמש ב
 //try Parse
 //לכן, לקחתי בחשבון ששם השחקן יכול להיות גם סטרינג, אותיות או ספרות מיוחדות.
 
 
-//2. לא הצלחתי לקשר בין המשתנה 
-//player
-//לבין המשתנים
-//name1 + name2
-
-//לכן בסוף המשחק כתוב אם שהמנצח הוא
-//X או y
-//בתחילת המשחק כתוב מי הוא
-//X 
-//ומי הוא
-//Y.
 
 
-//3. בנוסף, לא הצלחתי למנוע משחק לעלות על מהלך של השחקן השני. 
+
